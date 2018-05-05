@@ -8,19 +8,21 @@ public class Book {
     private String name;
     private String author;
     private String id;
+    private Boolean available;
 
     public Book() {
 
     }
 
-    public Book(String name, String author, String id) {
+    public Book(String name, String author, String id, Boolean available) {
         this.name = name;
         this.author = author;
         this.id = id;
+        this.available = available;
     }
 
     public Book(BookEntity entity) {
-        this(entity.getName(), entity.getAuthor(), entity.getId());
+        this(entity.getName(), entity.getAuthor(), entity.getId(), entity.getAvailable());
     }
 
     public String getAuthor() {
@@ -49,5 +51,13 @@ public class Book {
     public int hashCode() {
 
         return Objects.hash(getName(), getAuthor(), getId());
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 }

@@ -7,6 +7,8 @@ import reactor.core.publisher.Mono;
 import se.cygni.boklan.entities.BookEntity;
 import se.cygni.boklan.repositories.BookRepository;
 
+import java.time.Month;
+
 @RestController
 public class BookController {
 
@@ -28,12 +30,24 @@ public class BookController {
         return repository.save(createBookEntity(book)).then();
     }
 
+    @PutMapping("/availabilityStatus")
+    public Mono<BookEntity> updateLoanStatus(@RequestBody StatusUpdate status) {
+        return repository.findById(status.getId()).
+                map(bookEntity -> {
+                    bookEntity.setAvailable(status.getAvailable());
+
+                    repository.save(bookEntity).subscribe();
+                    return bookEntity;
+                });
+    }
+
     private static BookEntity createBookEntity(Book book) {
         BookEntity bookEntity = new BookEntity();
 
         bookEntity.setAuthor(book.getAuthor());
         bookEntity.setId(book.getId());
         bookEntity.setName(book.getName());
+        bookEntity.setAvailable(book.getAvailable());
         return bookEntity;
     }
 }

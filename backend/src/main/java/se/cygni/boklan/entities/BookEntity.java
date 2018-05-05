@@ -12,6 +12,7 @@ public class BookEntity {
     private String id;
     private String name;
     private String author;
+    private Boolean available;
 
     public String getId() {
         return id;
@@ -35,5 +36,13 @@ public class BookEntity {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 }
