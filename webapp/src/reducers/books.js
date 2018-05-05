@@ -1,16 +1,7 @@
+import React from 'react';
+
 export default function () {
-  return [
-    {
-      title: 'Javascript: The Good Parts',
-    },
-    {
-      title: 'Harry Potter',
-    },
-    {
-      title: 'The Dark Tower',
-    },
-    {
-      title: 'Elaquent Ruby',
-    },
-  ];
+  const URL = "https://localhost:8080/books";
+  return fetch(URL, { method: 'GET'})
+     .then( response => Promise.all([response, response.json()]));
 }
