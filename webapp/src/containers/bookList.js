@@ -16,7 +16,7 @@ class Booklist extends Component {
 
   componentDidMount() {
     this.state.isLoading = true;
-    fetch('http://localhost:8080/books')
+    fetch('https://localhost:8443/books')
     .then(response => response.json())
     .then(data => this.setState({books: data, isLoading: false }));
   }
