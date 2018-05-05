@@ -2,6 +2,8 @@ package se.cygni.boklan;
 
 import se.cygni.boklan.entities.BookEntity;
 
+import java.util.Objects;
+
 public class Book {
     private String name;
     private String author;
@@ -31,5 +33,21 @@ public class Book {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        Book book = (Book) o;
+        return Objects.equals(getName(), book.getName()) &&
+                Objects.equals(getAuthor(), book.getAuthor()) &&
+                Objects.equals(getId(), book.getId());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getName(), getAuthor(), getId());
     }
 }
