@@ -1,0 +1,7 @@
+{
+    "extends": "airbnb",
+    "rules": {
+        "no-script-url": "off",
+        "react/jsx-filename-extension": "off"
+    }
+}
