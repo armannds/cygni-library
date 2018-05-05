@@ -1,7 +1,9 @@
 package se.cygni.boklan.entities;
 
+import org.reactivestreams.Publisher;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import se.cygni.boklan.Book;
 
 @Document(collection = "books")
 public class BookEntity {

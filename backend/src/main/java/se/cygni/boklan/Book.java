@@ -1,5 +1,7 @@
 package se.cygni.boklan;
 
+import se.cygni.boklan.entities.BookEntity;
+
 public class Book {
     private String name;
     private String author;
@@ -13,6 +15,10 @@ public class Book {
         this.name = name;
         this.author = author;
         this.id = id;
+    }
+
+    public Book(BookEntity entity) {
+        this(entity.getName(), entity.getAuthor(), entity.getId());
     }
 
     public String getAuthor() {

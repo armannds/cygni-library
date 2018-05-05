@@ -1,36 +1,39 @@
 package se.cygni.boklan;
 
+import org.reactivestreams.Publisher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import reactor.core.publisher.Mono;
+import se.cygni.boklan.entities.BookEntity;
+import se.cygni.boklan.repositories.BookRepository;
 
 @RestController
 public class BookController {
 
-    public static List<Book> books = new ArrayList<>();
+    private final BookRepository repository;
 
-    @GetMapping("/book")
-    public Book getBook() {
-        if (books.isEmpty()) {
-            return new Book("Harry potter", "Rowling", "1");
-        } else {
-            return books.get(0);
-        }
+    @Autowired
+    public BookController(BookRepository repository) {
+        this.repository = repository;
     }
 
     @GetMapping("/book/{id}")
-    public Book getBook(@PathVariable("id") String id) {
-        Optional<Book> matchingBook = books.stream().
-                filter(book -> book.getId().equals(id)).
-                findFirst();
+    public Mono<Book> getBook(@PathVariable("id") String id) {
 
-        return matchingBook.get();
+        return repository.findById(id).map(it -> new Book(it));
     }
 
     @PutMapping("/book")
-    public void putBook(@RequestBody Book book) {
-        books.add(book);
+    public Mono<Void> putBook(@RequestBody Book book) {
+        return repository.save(createBookEntity(book)).then();
+    }
+
+    private static BookEntity createBookEntity(Book book) {
+        BookEntity bookEntity = new BookEntity();
+
+        bookEntity.setAuthor(book.getAuthor());
+        bookEntity.setId(book.getId());
+        bookEntity.setName(book.getName());
+        return bookEntity;
     }
 }
