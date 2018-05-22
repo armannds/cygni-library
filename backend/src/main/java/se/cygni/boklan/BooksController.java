@@ -20,7 +20,7 @@ public class BooksController {
     }
 
     @GetMapping("/books")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:8080")
     public Flux<Book> getBook() {
         return repository.findAll().map(Book::new);
     }
