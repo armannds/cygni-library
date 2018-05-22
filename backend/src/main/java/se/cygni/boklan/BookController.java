@@ -31,6 +31,7 @@ public class BookController {
     }
 
     @PutMapping("/availabilityStatus")
+    @CrossOrigin(origins = "http://localhost:8080")
     public Mono<BookEntity> updateLoanStatus(@RequestBody StatusUpdate status) {
         return repository.findById(status.getId()).
                 map(bookEntity -> {

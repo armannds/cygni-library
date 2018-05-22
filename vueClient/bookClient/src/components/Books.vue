@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul>
-      <li v-on:click="show(book)" v-bind:key="book.id" v-for="book in books">{{ book.name + ": " + book.author }}</li>    
+      <li v-on:click="show(book)" v-bind:class="{unavailable: !book.available}" v-bind:key="book.id" v-for="book in books">{{ book.name + ": " + book.author }}</li>    
     </ul>
   </div>
 </template>
@@ -16,7 +16,14 @@ export default {
   },
   methods: {
     show: function(book){
-      console.log(book.name)
+      console.log(book)
+      var request = {id: book.id, available:!book.available}
+      this.$http.put('http://localhost:8443/availabilityStatus', request).
+        then( response => {
+          if (response.ok) {
+            book.available = response.data.available
+          }
+        })
     }
   },
   created: function() {
@@ -52,5 +59,9 @@ li {
   display: inline-block;
   margin: 10px;
   text-align: left;
+}
+
+.unavailable {
+  text-decoration: line-through;
 }
 </style>
