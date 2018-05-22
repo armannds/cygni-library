@@ -3,10 +3,7 @@
       <label for="BookTitle">Book title: </label>
       <input id="BookTitle" v-model="book.name" placeholder="Book Title" />
       <label for="BookAuthor">Author name: </label>
-      <input id="BookAuthor" 
-        v-model="book.author" 
-        placeholder="Author Name" 
-      />
+      <input id="BookAuthor" v-model="book.author" placeholder="Author Name" />
       <input type="button" value="Create" v-on:click="createBook(book)"/>
 
   </div>

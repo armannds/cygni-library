@@ -43,6 +43,12 @@ public class BookController {
                 });
     }
 
+    @DeleteMapping("/book/{id}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public Mono<Void> deleteBook(@PathVariable("id") String id) {
+        return repository.deleteById(id);
+    }
+
     private static BookEntity createBookEntity(Book book) {
         BookEntity bookEntity = new BookEntity();
 

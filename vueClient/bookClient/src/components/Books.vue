@@ -1,7 +1,10 @@
 <template>
   <div>
     <ul>
-      <li v-on:click="show(book)" v-bind:class="{unavailable: !book.available}" v-bind:key="book.id" v-for="book in books">{{ book.name + ": " + book.author }}</li>    
+      <li v-on:click="toogle(book)" v-bind:class="{unavailable: !book.available}" v-bind:key="book.id" v-for="book in books">
+        <p >{{ book.name + ": " + book.author }}</p>
+        <input type="button" value ="X" v-on:click="deleteBook(book)">
+        </li>    
     </ul>
   </div>
 </template>
@@ -15,13 +18,27 @@ export default {
     }
   },
   methods: {
-    show: function(book){
+    toogle: function(book){
       console.log(book)
       var request = {id: book.id, available:!book.available}
       this.$http.put('http://localhost:8443/availabilityStatus', request).
         then( response => {
           if (response.ok) {
             book.available = response.data.available
+          }
+        })
+    },
+    deleteBook : function(book) {
+      console.log("Deleting" + book.id)
+      this.$http.delete('http://localhost:8443/book/' + book.id).
+        then(response => {
+          if (response.ok){
+            console.log("book deleted")
+
+            var index = this.books.map(function(it) {return it.id}).indexOf(book.id);
+            if (index > -1) {
+              this.books.splice(index, 1)
+            }
           }
         })
     }
@@ -58,7 +75,7 @@ li {
   background-color: #f4f4f4;
   display: inline-block;
   margin: 10px;
-  text-align: left;
+  text-align: center;
 }
 
 .unavailable {
