@@ -26,6 +26,7 @@ public class BookController {
     }
 
     @PutMapping("/book")
+    @CrossOrigin(origins = "http://localhost:8080")
     public Mono<Void> putBook(@RequestBody Book book) {
         return repository.save(createBookEntity(book)).then();
     }

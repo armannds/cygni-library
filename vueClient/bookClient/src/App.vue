@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <CreateBook />
     <Books/>
   </div>
 </template>
@@ -7,11 +8,12 @@
 <script>
 
 import Books from './components/Books'
+import CreateBook from './components/CreateBook'
 
 export default {
   name: 'App',
   components: {
-    Books
+    Books, CreateBook
   }
 }
 </script>
