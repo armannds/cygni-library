@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2> Create new Book</h2>
       <label for="BookTitle">Book title: </label>
       <input id="BookTitle" v-model="book.name" placeholder="Book Title" />
       <label for="BookAuthor">Author name: </label>
@@ -50,6 +51,9 @@ h1, h2 {
 ul {
   list-style-type: none;
   padding: 0;
+}
+div {
+  margin-bottom: 60px;
 }
 li {
   padding: 30px;

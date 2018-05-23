@@ -1,10 +1,15 @@
 <template>
-  <div>
+  <div id="container">
+    <h2>List of all books</h2>
+    <div id="filterDiv" >
+      <label for="filter">Show only available books</label>
+      <input v-model="filterEnabled" id="filter" type="checkbox" />
+    </div>
     <ul>
-      <li v-on:click="toogle(book)" v-bind:class="{unavailable: !book.available}" v-bind:key="book.id" v-for="book in books">
+      <li v-if="book.available || !filterEnabled" v-on:click="toogle(book)" v-bind:class="{unavailable: !book.available}" v-bind:key="book.id" v-for="book in books">
         <p>{{book.name}}</p>
         <p>{{book.author }}</p>
-        <input type="button" value ="X" v-on:click="deleteBook(book)">
+        <svg v-on:click="deleteBook(book)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
         </li>    
     </ul>
   </div>
@@ -15,7 +20,8 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      books: []
+      books: [],
+      filterEnabled : false
     }
   },
   methods: {
@@ -88,10 +94,47 @@ li {
   display: inline-block;
   margin: 10px;
   text-align: center;
+  padding-bottom: 10px;
+}
+
+li:hover {
+  transform: scale(1.05)
 }
 
 .unavailable {
   text-decoration: line-through;
   background-color: #faf0f0
 }
+
+svg {
+  width: 30px;
+  margin: 10px;
+}
+svg:hover {
+  cursor: pointer;
+    /* Start the shake animation and make the animation last for 0.5 seconds */
+    animation: shake 0.5s; 
+    /* When the animation is finished, start again */
+    animation-iteration-count: initial;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+#filterDiv {
+  margin-left: 60px;
+  text-align: left;
+}
+
 </style>
