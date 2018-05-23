@@ -2,7 +2,8 @@
   <div>
     <ul>
       <li v-on:click="toogle(book)" v-bind:class="{unavailable: !book.available}" v-bind:key="book.id" v-for="book in books">
-        <p >{{ book.name + ": " + book.author }}</p>
+        <p>{{book.name}}</p>
+        <p>{{book.author }}</p>
         <input type="button" value ="X" v-on:click="deleteBook(book)">
         </li>    
     </ul>
@@ -70,9 +71,20 @@ ul {
   list-style-type: none;
   padding: 0;
 }
+
+p:first-child {
+  font-size: large;
+}
+
+p {
+  padding: 0;
+  margin:0;
+  font-size: medium;
+}
+
 li {
   padding: 30px;
-  background-color: #f4f4f4;
+  background-color: #f0faf0;
   display: inline-block;
   margin: 10px;
   text-align: center;
@@ -80,5 +92,6 @@ li {
 
 .unavailable {
   text-decoration: line-through;
+  background-color: #faf0f0
 }
 </style>
