@@ -47,14 +47,21 @@ public class BookController {
 
     @PutMapping("/book/reserve")
     @CrossOrigin(origins = "*")
-    public Mono<BookEntity> reserveBook(@RequestBody Reservation reservation) {
+    public synchronized Mono<BookEntity> reserveBook(@RequestBody Reservation reservation) {
         System.out.println("id: " + reservation.getId());
         BookEntity book = repository.findById(reservation.getId()).block();
 
-
-        if (book != null && !book.getReservedBy().contains(reservation.name)) {
-            book.getReservedBy().add(reservation.name);
-            return repository.save(book);
+        if (book != null) {
+            if (reservation.isUnReserve()) {
+                    book.getReservedBy().remove(reservation.name);
+                System.out.println(book.getReservedBy());
+                    return Mono.just(repository.save(book).block());
+                } else {
+                if (book.getReservedBy().size() < book.getAvailableCopies() && !book.getReservedBy().contains(reservation.name)) {
+                    book.getReservedBy().add(reservation.name);
+                    return repository.save(book);
+                }
+            } return Mono.just(book);
         }
         return Mono.empty();
 

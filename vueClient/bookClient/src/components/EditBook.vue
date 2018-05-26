@@ -13,6 +13,7 @@
       <input id="reserveName" v-model="reserveName" placeholder="Your name" />
       <input type="button" v-on:click="reserve()" value="reserve" />
       </div>
+      <input v-if="nStagedToUnreserve() > 0" type="button" :value="nStagedToUnreserve() > 1?'return books':'return book'" @click="applyUnReserve"/>
 
   </div>
 </template>
@@ -43,11 +44,39 @@ export default {
         .then(response => {
           if (response.ok) {
             this.reserveName = "";
-            this.$parent.$emit('reload-books')
+            this.$parent.$emit("reload-books");
           } else {
             console.log(response);
           }
         });
+    },
+    nStagedToUnreserve: function () {
+      let count = 0;
+      this.reservedBy.map(function(reserver) {
+        if (reserver.unReserve) count ++
+      })
+      return count
+    },
+    applyUnReserve: function() {
+      this.reservedBy.map(b => {
+        if (b.unReserve) {
+          let request = {
+            name: b.name,
+            id: this.book.id,
+            unReserve: true
+          };
+          console.log("Unreserving")
+          console.log(request);
+          this.$http
+            .put("http://localhost:8443/book/reserve", request)
+            .then(response => {
+              if (response.ok) {
+                console.log(response.data)
+                this.$parent.$emit("reload-books");
+              }
+            });
+        }
+      });
     }
   },
   created: function() {

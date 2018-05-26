@@ -2,7 +2,7 @@ package se.cygni.boklan;
 
 public class Reservation {
     String id;
-    boolean reserve;
+    boolean unReserve;
     String name;
 
     public Reservation() {
@@ -17,7 +17,7 @@ public class Reservation {
         return name;
     }
 
-    public boolean isReserve() {
-        return reserve;
+    public boolean isUnReserve() {
+        return unReserve;
     }
 }

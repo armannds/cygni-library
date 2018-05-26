@@ -5,6 +5,8 @@
       <input id="BookTitle" v-model="book.name" placeholder="Book Title" />
       <label for="BookAuthor">Author name: </label>
       <input id="BookAuthor" v-model="book.author" placeholder="Author Name" />
+      <label for="BookCopies">#Copies</label> 
+      <input id="BookCopies" v-model="book.availableCopies" type="number">
       <input type="button" value="Create" v-on:click="createBook(book)"/>
 
   </div>
@@ -18,7 +20,7 @@ export default {
       book: {
         name: "",
         author: "",
-        availableCopies: 5
+        availableCopies: 1
       }
     }
   },
