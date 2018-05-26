@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import se.cygni.boklan.Book;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Document(collection = "books")
 public class BookEntity {
 
@@ -12,7 +15,16 @@ public class BookEntity {
     private String id;
     private String name;
     private String author;
-    private Boolean available;
+    private int availableCopies;
+    private List<String> reservedBy = new ArrayList<>();
+
+    public List<String> getReservedBy() {
+        return reservedBy;
+    }
+
+    public void setReservedBy(List<String> reservedBy) {
+        this.reservedBy = reservedBy;
+    }
 
     public String getId() {
         return id;
@@ -38,11 +50,11 @@ public class BookEntity {
         this.author = author;
     }
 
-    public Boolean getAvailable() {
-        return available;
+    public int getAvailableCopies() {
+        return availableCopies;
     }
 
-    public void setAvailable(Boolean available) {
-        this.available = available;
+    public void setAvailableCopies(int available) {
+        this.availableCopies = available;
     }
 }

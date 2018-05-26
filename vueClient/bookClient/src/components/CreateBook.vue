@@ -18,7 +18,7 @@ export default {
       book: {
         name: "",
         author: "",
-        available: true
+        availableCopies: 5
       }
     }
   },

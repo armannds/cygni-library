@@ -56,7 +56,10 @@ export default {
       this.$http.get("http://localhost:8443/books").then(response => {
         if (response.ok) {
           this.books = response.data;
-          this.books.map(it => (it.edit = false));
+          this.books.map(it => {
+            it.edit = false
+            it.available = it.availableCopies > 0
+            });
         } else {
           console.log(response);
         }
@@ -78,7 +81,7 @@ export default {
   },
   created: function() {
     this.books.push({ id: 1, name: "No books", author: "Sample Author" });
-
+    this.$on('reload-books', this.reloadBooks)
     this.reloadBooks();
   }
 };
@@ -116,9 +119,12 @@ li:hover {
   transform: scale(1.05);
 }
 
-.unavailable {
-  text-decoration: line-through;
+li.unavailable {
   background-color: #faf0f0;
+}
+
+li.unavailable div p {
+  text-decoration: line-through;
 }
 
 #filterDiv {
