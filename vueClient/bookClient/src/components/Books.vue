@@ -5,72 +5,87 @@
       <label for="filter">Show only available books</label>
       <input v-model="filterEnabled" id="filter" type="checkbox" />
     </div>
-    <ul>
-      <li v-if="book.available || !filterEnabled" v-on:click="toogle(book)" v-bind:class="{unavailable: !book.available}" v-bind:key="book.id" v-for="book in books">
-        <p>{{book.name}}</p>
-        <p>{{book.author }}</p>
-        <svg v-on:click="deleteBook(book)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
-        </li>    
+    <ul v-on:delete-book="filterEnabled = !filterEnabled" >
+      <li v-if="book.available || !filterEnabled" v-on:click="toogleEdit(book)" v-bind:class="{unavailable: !book.available}" v-bind:key="book.id" v-for="book in books">
+        <BookSummary v-bind:book="book" />
+        <EditBook v-if="idToEdit === book.id" v-bind:book="book"/> 
+        <svg v-on:click="deleteBook(book.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+  
+      </li> 
     </ul>
   </div>
 </template>
 
 <script>
+import EditBook from "./EditBook";
+import BookSummary from "./BookSummary";
+
 export default {
-  name: 'HelloWorld',
-  data () {
+  components: {
+    EditBook,
+    BookSummary
+  },
+  data() {
     return {
       books: [],
-      filterEnabled : false
-    }
+      filterEnabled: false,
+      idToEdit: ""
+    };
   },
   methods: {
-    toogle: function(book){
-      console.log(book)
-      var request = {id: book.id, available:!book.available}
-      this.$http.put('http://localhost:8443/availabilityStatus', request).
-        then( response => {
-          if (response.ok) {
-            book.available = response.data.available
-          }
-        })
+    toogleEdit: function(book) {
+      if (this.idToEdit == book.id) {
+        // this.idToEdit = ""  // won't work due to click through
+      } else {
+        this.idToEdit = book.id
+      }
     },
-    deleteBook : function(book) {
-      console.log("Deleting" + book.id)
-      this.$http.delete('http://localhost:8443/book/' + book.id).
-        then(response => {
-          if (response.ok){
-            console.log("book deleted")
-
-            var index = this.books.map(function(it) {return it.id}).indexOf(book.id);
-            if (index > -1) {
-              this.books.splice(index, 1)
-            }
+    toogle: function(book) {
+      console.log(book);
+      var request = { id: book.id, available: !book.available };
+      this.$http
+        .put("http://localhost:8443/availabilityStatus", request)
+        .then(response => {
+          if (response.ok) {
+            book.available = response.data.available;
+          }
+        });
+    },
+    reloadBooks: function() {
+      console.log("loading books");
+      this.$http.get("http://localhost:8443/books").then(response => {
+        if (response.ok) {
+          this.books = response.data;
+          this.books.map(it => (it.edit = false));
+        } else {
+          console.log(response);
+        }
+      });
+    },
+    deleteBook: function(book) {
+      console.log("Deleting: " + book);
+      this.$http
+        .delete("http://localhost:8443/book/" + book)
+        .then(response => {
+          if (response.ok) {
+            console.log("book deleted");
           }
         })
+        .then(e => {
+          this.reloadBooks();
+        });
     }
   },
   created: function() {
-    this.books.push(
-      {id:1, name:"Mamma Mu", author:"Mia"},
-      {id:2, name:"Mias Bil", author:"Kalle"}
-      )
+    this.books.push({ id: 1, name: "No books", author: "Sample Author" });
 
-      this.$http.get('http://localhost:8443/books').
-        then(response => {
-          if (response.ok) {
-            this.books = response.data
-          } else {
-            console.log(response)
-          }
-        })
+    this.reloadBooks();
   }
-}
+};
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 ul {
@@ -84,7 +99,7 @@ p:first-child {
 
 p {
   padding: 0;
-  margin:0;
+  margin: 0;
   font-size: medium;
 }
 
@@ -98,38 +113,12 @@ li {
 }
 
 li:hover {
-  transform: scale(1.05)
+  transform: scale(1.05);
 }
 
 .unavailable {
   text-decoration: line-through;
-  background-color: #faf0f0
-}
-
-svg {
-  width: 30px;
-  margin: 10px;
-}
-svg:hover {
-  cursor: pointer;
-    /* Start the shake animation and make the animation last for 0.5 seconds */
-    animation: shake 0.5s; 
-    /* When the animation is finished, start again */
-    animation-iteration-count: initial;
-}
-
-@keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg); }
-    20% { transform: translate(-3px, 0px) rotate(1deg); }
-    30% { transform: translate(3px, 2px) rotate(0deg); }
-    40% { transform: translate(1px, -1px) rotate(1deg); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    70% { transform: translate(3px, 1px) rotate(-1deg); }
-    80% { transform: translate(-1px, -1px) rotate(1deg); }
-    90% { transform: translate(1px, 2px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  background-color: #faf0f0;
 }
 
 #filterDiv {
@@ -137,4 +126,52 @@ svg:hover {
   text-align: left;
 }
 
+svg:hover {
+  cursor: pointer;
+  /* Start the shake animation and make the animation last for 0.5 seconds */
+  animation: shake 0.5s;
+  /* When the animation is finished, start again */
+  animation-iteration-count: initial;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+svg {
+  width: 30px;
+  margin: 10px;
+}
 </style>
