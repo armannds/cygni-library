@@ -8,10 +8,11 @@
                 {{person.name}}
         </li>
       </ul>
-
+      <div v-if="book.available">
       <label for="reserveName">Reserve book: </label>
       <input id="reserveName" v-model="reserveName" placeholder="Your name" />
       <input type="button" v-on:click="reserve()" value="reserve" />
+      </div>
 
   </div>
 </template>
@@ -85,6 +86,8 @@ function addUser(vm, nUsers) {
 <style scoped>
 .unReserve {
   text-decoration: line-through;
+  animation: shake 0.8s;
+  animation-iteration-count: initial;
 }
 div {
   text-align: left;
@@ -103,5 +106,18 @@ td:first-child {
 
 li::first-letter {
   text-transform: capitalize;
+}
+
+li {
+  cursor: pointer;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  50% {
+    transform: translate(3px, 0px) rotate(-2deg);
+  }
 }
 </style>

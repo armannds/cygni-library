@@ -58,7 +58,7 @@ export default {
           this.books = response.data;
           this.books.map(it => {
             it.edit = false
-            it.available = it.availableCopies > 0
+            it.available = it.availableCopies > it.reservedBy.length
             });
         } else {
           console.log(response);
